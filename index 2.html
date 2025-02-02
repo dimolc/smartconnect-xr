@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartConnect XR™</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lora:wght@400;700&family=Montserrat:wght@400;700&display=swap');
+        
+        :root {
+            --primary-color: gold;
+            --secondary-color: black;
+            --background-gradient: linear-gradient(to right, #0a0a0a, #1a1a1a);
+            --font-primary: 'Poppins', sans-serif;
+        }
+        
+        body {
+            font-family: var(--font-primary);
+            background: var(--background-gradient);
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            display: inline-block;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+        }
+        .qr-code {
+            width: 100px;
+            margin: 10px;
+        }
+        .button {
+            display: block;
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 10px;
+            margin: 10px auto;
+            width: 90%;
+            cursor: pointer;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .background-upload, .logo-upload {
+            margin-top: 10px;
+        }
+        .customization-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        select, input {
+            margin: 5px;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
+    <script>
+        function changeFont(font) {
+            document.body.style.fontFamily = font;
+        }
+        function changeColorScheme(primary, secondary, gradient) {
+            document.documentElement.style.setProperty('--primary-color', primary);
+            document.documentElement.style.setProperty('--secondary-color', secondary);
+            document.documentElement.style.setProperty('--background-gradient', gradient);
+        }
+        function updateLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('logo-img').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        function updateBackground(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.querySelector('.card').style.backgroundImage = `url(${e.target.result})`;
+                    document.querySelector('.card').style.backgroundSize = 'cover';
+                    document.querySelector('.card').style.backgroundPosition = 'center';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>SmartConnect XR™ - Tarjeta Digital</h1>
+    
+    <div class="customization-options">
+        <label for="font-select">Fuente:</label>
+        <select id="font-select" class="font-selector" onchange="changeFont(this.value)">
+            <option value="'Poppins', sans-serif">Poppins</option>
+            <option value="'Roboto', sans-serif">Roboto</option>
+            <option value="'Open Sans', sans-serif">Open Sans</option>
+            <option value="'Lora', serif">Lora</option>
+            <option value="'Montserrat', sans-serif">Montserrat</option>
+        </select>
+        
+        <label for="theme-select">Tema:</label>
+        <select id="theme-select" class="color-selector" onchange="changeColorScheme(this.value.split(',')[0], this.value.split(',')[1], this.value.split(',')[2])">
+            <option value="gold,black,linear-gradient(to right, #0a0a0a, #1a1a1a)">Dorado & Negro</option>
+            <option value="#007bff,#ffffff,linear-gradient(to right, #000428, #004e92)">Azul & Blanco</option>
+            <option value="#ff4081,#000000,linear-gradient(to right, #ff416c, #ff4b2b)">Rosa & Negro</option>
+            <option value="#28a745,#ffffff,linear-gradient(to right, #1d976c, #93f9b9)">Verde & Blanco</option>
+            <option value="#6f42c1,#ffffff,linear-gradient(to right, #2c3e50, #4ca1af)">Morado & Blanco</option>
+        </select>
+    </div>
+    
+    <div class="card">
+        <input type="file" accept="image/*" class="logo-upload" onchange="updateLogo(event)">
+        <img id="logo-img" class="logo" src="default-logo.png" alt="Logo">
+        <h2 contenteditable="true">Nombre del Usuario</h2>
+        <p contenteditable="true">Empresa | Cargo</p>
+        <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://tupagina.com" alt="QR Code">
+        <p>Escanea el QR o toca con NFC</p>
+        <a class="button" href="tel:+1234567890">📞 Llamar</a>
+        <a class="button" href="mailto:email@empresa.com">📧 Enviar Email</a>
+        <a class="button" href="https://linkedin.com">🔗 LinkedIn</a>
+        <input class="background-upload" type="file" accept="image/*" onchange="updateBackground(event)">
+        <p>Subir fondo personalizado</p>
+    </div>
+</body>
+</html>
